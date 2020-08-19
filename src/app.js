@@ -24,34 +24,24 @@ function IncrementLike(request, response, next){
 
   let repositoryLike = repositories[repositoryIndex]
   
-  let like = repositoryLike.like + 1 
+  let like = repositoryLike.likes + 1 
 
-  repositoryLike.like = like
+  repositoryLike.likes = like
 
 
 
-  response.json(repositoryLike)
+  return response.json(repositoryLike)
   
 }
 
 
-app.get("/repositories", (request, response) => {
-
-  let {title} = request.query
-
-  let filter = title
-     ? repositories.filter(repo => repo.title.includes(title))
-    : repositories
-  
-  return response.json(filter)
-  
-});
+app.get("/repositories", (request, response) => response.json(repositories) )
 
 app.post("/repositories", (request, response) => {
   
   const {title, url, techs} = request.body
 
-  const repositoryValues = {id:uuid(),title, url, techs, like: 0}
+  const repositoryValues = {id:uuid(),title, url, techs, likes: 0}
 
   repositories.push(repositoryValues)
 
@@ -71,15 +61,13 @@ app.put("/repositories/:id", (request, response) => {
 
   }
 
- const repository = repositories[repositoryIndex]
-
 
    const NewValuesOfRepository = {
      id,
      title,
      url,
      techs,
-     like: repository.like
+     
    }
 
    repositories[repositoryIndex] = NewValuesOfRepository
@@ -108,8 +96,8 @@ app.delete("/repositories/:id", (request, response) => {
 
 });
 
-app.post("/repositories/:id/like", IncrementLike, (request, response) => {
-  
+app.post("/repositories/:id/like",IncrementLike, (request, response) => {
+
 });
 
 module.exports = app;
